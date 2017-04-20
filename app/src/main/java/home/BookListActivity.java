@@ -11,7 +11,7 @@ import base.ToolbarActivity;
  * Created by wolfmatrix on 4/17/17.
  */
 
-public class BookDetailActivity extends ToolbarActivity {
+public class BookListActivity extends ToolbarActivity {
     private BookDetailFragment bookDetailFragment;
     @Override
     protected int getToolbarResourceLayout() {

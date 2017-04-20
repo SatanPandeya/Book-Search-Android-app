@@ -10,5 +10,5 @@ import dagger.Component;
 @Singleton
 @Component(modules = BookDetailModule.class)
 public interface BookDetailComponent {
-    void inject(BookDetailActivity bookDetailActivity);
+    void inject(BookListActivity bookDetailActivity);
 }
