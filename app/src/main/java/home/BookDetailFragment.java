@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -91,6 +92,7 @@ public class BookDetailFragment extends BaseFragment implements BookDetailView.V
                         dataList = result.getData();
                         bookListAdapter = new BookListAdapter(getContext(), dataList);
                         bookListRecyclerView.setAdapter(bookListAdapter);
+                        bookListRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), new LinearLayoutManager(getContext()).getOrientation()));
                     } else {
                         progressDialog.dismiss();
                         Snackbar.make(getActivity().findViewById(android.R.id.content), "Result not found", Snackbar.LENGTH_LONG).show();
