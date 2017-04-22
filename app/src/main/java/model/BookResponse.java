@@ -1,21 +1,43 @@
 
 package model;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class BookResponse {
 
-    @SerializedName("ISBN:9780980200447")
+    @SerializedName("start")
     @Expose
-    private ISBN9780980200447 iSBN9780980200447;
+    private Integer start;
+    @SerializedName("num_found")
+    @Expose
+    private Integer numFound;
+    @SerializedName("docs")
+    @Expose
+    private List<Data> data = null;
 
-    public ISBN9780980200447 getISBN9780980200447() {
-        return iSBN9780980200447;
+    public Integer getStart() {
+        return start;
     }
 
-    public void setISBN9780980200447(ISBN9780980200447 iSBN9780980200447) {
-        this.iSBN9780980200447 = iSBN9780980200447;
+    public void setStart(Integer start) {
+        this.start = start;
     }
 
+    public Integer getNumFound() {
+        return numFound;
+    }
+
+    public void setNumFound(Integer numFound) {
+        this.numFound = numFound;
+    }
+
+    public List<Data> getData() {
+        return data;
+    }
+
+    public void setData(List<Data> data) {
+        this.data = data;
+    }
 }

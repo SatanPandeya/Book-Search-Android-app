@@ -1,5 +1,7 @@
 package api;
 
+import java.util.List;
+
 import model.BookResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -9,6 +11,6 @@ import retrofit2.http.GET;
  */
 
 public interface BookService {
-    @GET("api/books?bibkeys=ISBN:9780980200447&jscmd=details&format=json")
+    @GET("search.json?q=utf-8")
     Call<BookResponse> getBookResponse();
 }

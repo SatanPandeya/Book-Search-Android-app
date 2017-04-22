@@ -1,10 +1,13 @@
 package home;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.book.R;
 
@@ -19,8 +22,9 @@ import base.BaseFragment;
 import base.ToolbarActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import model.BookResponse;
-import model.Details;
+import model.Data;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +36,9 @@ import retrofit2.Response;
 public class BookDetailFragment extends BaseFragment implements BookDetailView.View {
     @Inject
     BookDetailPresenter bookDetailPresenter;
+    private BookListAdapter bookListAdapter;
+    private List<Data> dataList = new ArrayList<>();
+    private Unbinder unbinder;
 
 
     @BindView(R.id.bookDetailRecyclerViewId)
@@ -52,10 +59,11 @@ public class BookDetailFragment extends BaseFragment implements BookDetailView.V
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         setupPresenter();
         setupToolbarTitle();
         setupRetrofit();
+        bookListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
@@ -70,22 +78,33 @@ public class BookDetailFragment extends BaseFragment implements BookDetailView.V
 
     @Override
     public void setupRetrofit() {
+        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), null, null, true, false);
         BookService bookService = BookRetroClient.getBookService();
         Call<BookResponse> responseCall = bookService.getBookResponse();
         responseCall.enqueue(new Callback<BookResponse>() {
             @Override
             public void onResponse(Call<BookResponse> call, Response<BookResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
+                    progressDialog.dismiss();
                     BookResponse result = response.body();
-                    if (result.getISBN9780980200447().getDetails() != null){
-                        bookListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    if (result.getData() != null) {
+                        dataList = result.getData();
+                        bookListAdapter = new BookListAdapter(getContext(), dataList);
+                        bookListRecyclerView.setAdapter(bookListAdapter);
+                    } else {
+                        progressDialog.dismiss();
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Result not found", Snackbar.LENGTH_LONG).show();
                     }
+                } else {
+                    progressDialog.dismiss();
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), response.message(), Snackbar.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<BookResponse> call, Throwable t) {
-
+                progressDialog.dismiss();
+                Snackbar.make(getActivity().findViewById(android.R.id.content), t.getMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -94,5 +113,6 @@ public class BookDetailFragment extends BaseFragment implements BookDetailView.V
     public void onDestroy() {
         super.onDestroy();
         bookDetailPresenter.destroy();
+        unbinder.unbind();
     }
 }

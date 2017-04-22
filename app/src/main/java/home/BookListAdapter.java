@@ -1,11 +1,11 @@
 package home;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.book.R;
@@ -13,9 +13,7 @@ import com.book.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import model.Details;
+import model.Data;
 
 /**
  * Created by wolfmatrix on 4/20/17.
@@ -23,6 +21,12 @@ import model.Details;
 
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.MyBookListViewHolderClass> {
     private Context context;
+    private List<Data> dataList = new ArrayList<>();
+
+    public BookListAdapter(Context context, List<Data> dataList) {
+        this.context = context;
+        this.dataList = dataList;
+    }
 
     @Override
     public MyBookListViewHolderClass onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,24 +36,25 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.MyBook
 
     @Override
     public void onBindViewHolder(MyBookListViewHolderClass holder, int position) {
-
+        Data data = dataList.get(position);
+        holder.bookTitle.setText(data.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return dataList.size();
     }
 
     public class MyBookListViewHolderClass extends RecyclerView.ViewHolder {
-        @BindView(R.id.bookCoverImageId)
-        ImageView bookImage;
-        @BindView(R.id.titleId)
-        TextView bookTitle;
-        @BindView(R.id.dividerLineId)
-        View dividerLine;
+        private TextView bookTitle;
+        private Typeface typeface;
+
         public MyBookListViewHolderClass(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            bookTitle = (TextView) itemView.findViewById(R.id.bookTitle);
+
+            typeface = Typeface.createFromAsset(itemView.getContext().getAssets(), "fonts/Ubuntu-Light.ttf");
+            bookTitle.setTypeface(typeface);
         }
     }
 }
